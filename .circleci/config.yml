@@ -8,9 +8,13 @@ jobs:
   deploy:
     docker:
       - image: circleci/php:7.1-node-browsers
+    parameters:
+      cloud:
+        default: google
+        type: string
     steps:
       - checkout
-      - run: echo "Deploying"
+      - run: echo "Deploying << parameters.cloud >>"
 
 workflows:
   commit:
@@ -18,11 +22,13 @@ workflows:
       - build:
           name: build_app
       - deploy:
-          name: deploy_to_google
+          name: deploy_google
+          cloud: google
           requires:
             - build_app
       - deploy:
-          name: deploy_to_aws
+          name: deploy_aws
+          cloud: aws
           requires:
             - build_app
 
